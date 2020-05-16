@@ -68,8 +68,8 @@ func getUsersForGroup(srv *admin.Service, group string) ([]directoryUser, error)
 	return users, nil
 }
 
-func mergeUsers(users map[string][]directoryUser, groupMapping map[string][]string) map[string]localUser {
-	usermap := make(map[string]localUser)
+func mergeUsers(users map[string][]directoryUser, groupMapping map[string][]string) map[string]*localUser {
+	usermap := make(map[string]*localUser)
 
 	for directoryGroup, ulist := range users {
 		for _, u := range ulist {
@@ -83,7 +83,7 @@ func mergeUsers(users map[string][]directoryUser, groupMapping map[string][]stri
 
 			local, ok := usermap[localName]
 			if !ok {
-				local = localUser{
+				local = &localUser{
 					Username:        localName,
 					FullName:        u.FullName,
 					Email:           u.Email,
@@ -108,7 +108,7 @@ func mergeUsers(users map[string][]directoryUser, groupMapping map[string][]stri
 	return usermap
 }
 
-func getUsers(srv *admin.Service, groups map[string][]string) (map[string]localUser, error) {
+func getUsers(srv *admin.Service, groups map[string][]string) (map[string]*localUser, error) {
 	usermap := make(map[string][]directoryUser)
 
 	for group := range groups {
@@ -123,7 +123,7 @@ func getUsers(srv *admin.Service, groups map[string][]string) (map[string]localU
 	return mergeUsers(usermap, groups), nil
 }
 
-func getDirectoryUsers(guconfig gooleUsersConfig) (map[string]localUser, error) {
+func getDirectoryUsers(guconfig gooleUsersConfig) (map[string]*localUser, error) {
 	ctx := context.Background()
 	credfile := os.Getenv("GOOGLE_APPLICATION_CREDENTIALS")
 	b, err := ioutil.ReadFile(credfile)

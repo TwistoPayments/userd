@@ -153,7 +153,7 @@ func hasEnabledPassword(username string) (bool, error) {
 	return enp, nil
 }
 
-func setAuthorizedKeys(u localUser, authorizedKeys *bytes.Buffer) error {
+func setAuthorizedKeys(u *localUser, authorizedKeys *bytes.Buffer) error {
 	sshDir := filepath.Join(u.Home, ".ssh")
 	authorizedKeysFilename := filepath.Join(sshDir, "authorized_keys")
 

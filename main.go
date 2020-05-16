@@ -64,7 +64,7 @@ func (u *localUser) gecosString() string {
 	}
 }
 
-func syncUsers(usersFromDirectory map[string]localUser) error {
+func syncUsers(usersFromDirectory map[string]*localUser) error {
 	existingUsers, err := getExistingUsers()
 	if err != nil {
 		return err
@@ -132,7 +132,7 @@ func syncUsers(usersFromDirectory map[string]localUser) error {
 	return nil
 }
 
-func syncKeys(u localUser) error {
+func syncKeys(u *localUser) error {
 	authorizedKeys := new(bytes.Buffer)
 
 	if u.SSHKeysUrl != "" {
@@ -184,11 +184,11 @@ func writeUserInfo(u localUser, ui userInfo) error {
 }
 */
 
-func includeSystemUsers(directoryUsers map[string]localUser, systemUsers []localUser) {
+func includeSystemUsers(directoryUsers map[string]*localUser, systemUsers []localUser) {
 	for _, u := range systemUsers {
 		directoryUser, present := directoryUsers[u.Username]
 		if !present {
-			directoryUsers[u.Username] = u
+			directoryUsers[u.Username] = &u
 		} else {
 			log.Fatalf(
 				"User %s defined both in directory and in systemUsers.\nDirectory definition: %#v\n",
